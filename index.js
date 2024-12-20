@@ -71,21 +71,32 @@ const generateId = () => {
 // Añaadir al principio "app.use(express.json());"
 app.post("/api/persons", (request, response) => {
     const body = request.body;
+    // console.log("body", body);
+    const personName = persons.find((person) => body.name === person.name);
+    // console.log({ personName });
 
-    if (!body.name) {
-        return response.status(400).json({
-            error: "name missing",
-        });
+    if (personName) {
+        if (!body.name || !body.number) {
+            return response.status(400).json({
+                error: "name or number missing",
+            });
+        }
+
+        if (body.name === personName.name) {
+            return response.status(400).json({
+                error: "name must be unique",
+            });
+        }
+    } else {
+        const person = {
+            name: body.name,
+            number: body.number,
+            id: generateId(),
+        };
+        persons = persons.concat(person);
+
+        response.json(person);
     }
-
-    const person = {
-        name: body.name,
-        number: body.number,
-        id: generateId(),
-    };
-    persons = persons.concat(person);
-
-    response.json(person);
 });
 
 const PORT = 3001;
