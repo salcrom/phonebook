@@ -1,7 +1,19 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 
 app.use(express.json()); //Para las peticiones POST->obtener el body
+
+// Configuración básica de morgan con 'tiny'
+// app.use(morgan("tiny"));
+
+// Configuración personalizada que incluye el body en POST requests
+morgan.token("body", (req) => JSON.stringify(req.body));
+app.use(
+    morgan(
+        ":method :url :status :res[content-length] - :response-time ms :body"
+    )
+);
 
 let persons = [
     {
@@ -98,6 +110,12 @@ app.post("/api/persons", (request, response) => {
         response.json(person);
     }
 });
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
 
 const PORT = 3001;
 app.listen(PORT);
