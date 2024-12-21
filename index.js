@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const app = express();
 
 app.use(express.json()); //Para las peticiones POST->obtener el body
+app.use(express.static("dist"));
 
 // Configuración básica de morgan con 'tiny'
 // app.use(morgan("tiny"));
