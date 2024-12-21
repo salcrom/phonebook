@@ -1,9 +1,11 @@
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
+const cors = require("cors");
 
 app.use(express.json()); //Para las peticiones POST->obtener el body
 app.use(express.static("dist"));
+app.use(cors());
 
 // Configuración básica de morgan con 'tiny'
 // app.use(morgan("tiny"));
