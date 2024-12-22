@@ -87,31 +87,37 @@ const generateId = () => {
 app.post("/api/persons", (request, response) => {
     const body = request.body;
     // console.log("body", body);
+    if (!body.name) {
+        return response.status(400).json({
+            error: "name missing",
+        });
+    }
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId(),
+    };
+    persons = persons.concat(person);
+
+    response.json(person);
+});
+
+app.put("api/persons/:id", (request, response) => {
+    const body = request.body;
+
     const personName = persons.find((person) => body.name === person.name);
     // console.log({ personName });
+    if (!personName) return null;
 
-    if (personName) {
-        if (!body.name || !body.number) {
-            return response.status(400).json({
-                error: "name or number missing",
-            });
-        }
+    const person = {
+        ...person,
+        number: body.number,
+    };
 
-        if (body.name === personName.name) {
-            return response.status(400).json({
-                error: "name must be unique",
-            });
-        }
-    } else {
-        const person = {
-            name: body.name,
-            number: body.number,
-            id: generateId(),
-        };
-        persons = persons.concat(person);
+    persons = persons.concat(person);
 
-        response.json(person);
-    }
+    response.json(person);
 });
 
 const unknownEndpoint = (request, response) => {
