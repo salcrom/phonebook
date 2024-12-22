@@ -106,18 +106,23 @@ app.post("/api/persons", (request, response) => {
 app.put("/api/persons/:id", (request, response) => {
     const body = request.body;
 
-    const personName = persons.find((person) => body.name === person.name);
+    const personName = persons.find((person) => {
+        if (body.name === person.name) {
+            number = body.number;
+            return number;
+        }
+    });
     // console.log({ personName });
     if (!personName) return null;
 
-    const person = {
-        ...person,
-        number: body.number,
+    const updatedPerson = {
+        ...personName,
+        number,
     };
 
-    persons = persons.concat(person);
+    persons = persons.concat(updatedPerson);
 
-    response.json(person);
+    response.json(updatedPerson);
 });
 
 const unknownEndpoint = (request, response) => {
