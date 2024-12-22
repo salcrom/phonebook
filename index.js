@@ -103,7 +103,7 @@ app.post("/api/persons", (request, response) => {
     response.json(person);
 });
 
-app.put("api/persons/:id", (request, response) => {
+app.put("/api/persons/:id", (request, response) => {
     const body = request.body;
 
     const personName = persons.find((person) => body.name === person.name);
